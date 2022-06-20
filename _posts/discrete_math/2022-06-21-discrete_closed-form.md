@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "高级点的离散数学：闭式解"
-subtitle: "Advanced Discrete Math: Closed form Expression"
+subtitle: "Advanced Discrete Math: Closed-form Expression"
 date: 2022-06-21
 author: "BeanPudding"
 header-img: "img/post-math.jpg"
