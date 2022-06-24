@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "高级点的离散数学：闭式解"
-subtitle: "Advanced Discrete Math: Closed-form Expression"
+title: "高级点的离散数学（二）：闭式解"
+subtitle: "Advanced Discrete Math #2: Closed-form Expression"
 date: 2022-06-21
 author: "BeanPudding"
 header-img: "img/post-math.jpg"
 tags: 
     - 离散数学
-    - 系列
+    # - 系列
 ---
 
 # 闭式解 (Closed-form Expression)
@@ -118,7 +118,7 @@ $$
 T_n = \frac{2}{3} n^3 + n^2 + \frac{22}{3}n
 $$
 
-但这并不是最终的结果，因为这个关系只考虑的递归的步骤，并没有考虑初始值， 也就是$T_0$。我们将$T_0$加在后面，
+但这并不是最终的结果，因为这个关系只考虑到递归的步骤，并没有考虑初始值， 也就是$T_0$。我们将$T_0$加在后面，
 
 $$
 T_n = \frac{2}{3} n^3 + n^2 + \frac{22}{3}n + 7

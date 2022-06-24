@@ -1,18 +1,16 @@
 ---
 layout: post
-title: "高级点的离散数学：递归"
-subtitle: "Advanced Discrete Math: Recursion"
+title: "高级点的离散数学（一）：递归"
+subtitle: "Advanced Discrete Math #1: Recursion"
 date: 2022-05-17
 author: "BeanPudding"
 header-img: "img/post-math.jpg"
 tags: 
     - 离散数学
-    - 系列
+    # - 系列
 ---
 
 # 递归 (Recursion)
-
-## 什么是递归
 
 递归是指函数在定义中调用了其自身的方法。例如，$a^n$可以用以下递归的形式来表示：
 
@@ -144,7 +142,7 @@ $$
 
 第一种方法更像是针对$k=1$时的特解。还有一种方法更加泛化，每一步递归也更加简单。
 
-同样是当$n = 10, k = 1$时，第二个人被处决了，此时，我们直接对剩下的人重新排序，但我们把第三个人放到第一个位置。
+同样是当$n = 10, k = 1$时，第二个人被处决了，此时，我们直接对剩下的人重新排序，但我们把第三个人放到第一个位置，因为下一次被处决的人将是第三个人之后的人。
 
 ![](/img/in-post/discrete_math/recursion_josephus2.png){: width="90%"}
 
