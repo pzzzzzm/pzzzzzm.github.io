@@ -1,0 +1,50 @@
+.container {
+    width: 100%;
+}
+
+.score-selected {
+    background-color: steelblue;
+    color: azure;
+}
+
+.game-title {
+    min-width: 20%;
+}
+
+.game-block {
+    text-align: center;
+}
+
+span.game-title {
+    margin-left: auto;
+}
+
+.score-delete {
+    margin-right: auto;
+}
+
+.add-game-block {
+    width: 40%;
+}
+
+div.input-group {
+    margin: 0 auto;
+    text-align:center;
+}
+
+.result-block {
+    visibility: hidden;
+}
+
+.game-title-result {
+    font-size: 36px;
+}
+
+.div-line {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* .score :hover {
+    color: aqua;
+} */
