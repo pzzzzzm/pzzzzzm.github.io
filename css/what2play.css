@@ -45,6 +45,10 @@ div.input-group {
     margin-bottom: 10px;
 }
 
+.add-game-block .dropdown-menu {
+    min-width: 0;
+}
+
 /* .score :hover {
     color: aqua;
 } */

@@ -1,5 +1,12 @@
+let default_list  = "英雄联盟,守望先锋,APEX";
+let game_list = [];
+if (getCookie("glist").length === 0) {
+  game_list = str2array(default_list);
+}
+else {
+  loadGames();
+}
 
-let game_list = ['英雄联盟', '守望先锋', 'APEX'];
 let game_dict = {};
 let score_dict = {
   "high": 8,
@@ -18,6 +25,19 @@ const game_block =
     "  <button class=\"btn btn-outline-secondary score score-delete\" type=\"button\">🐶都不玩，删了！<i class=\"bi bi-x\"></i></button>\n" +
     "</div>";
 
+function saveGames(glist) {
+  setCookie("glist", array2str(glist), 30);
+}
+
+function loadGames() {
+  game_list = str2array(getCookie("glist"));
+}
+
+function resetGames() {
+  saveGames(str2array(default_list));
+  location.reload();
+}
+
 function addGame(game_title) {
   $(".game-list").append(game_block);
   $(".game-block").last().attr("id", cnt);
@@ -25,6 +45,7 @@ function addGame(game_title) {
   game_dict[cnt] = game_title;
   cnt ++;
   sizeCheck();
+  saveGames(Object.values(game_dict));
 }
 
 function setScores() {
@@ -97,6 +118,7 @@ $(document).ready(function(){
     let this_id = $(this).parent().attr("id");
     delete game_dict[this_id];
     $(".game-block#" + this_id).remove();
+    saveGames(Object.values(game_dict));
   })
 
   $(".add-game").click(function (){
@@ -110,6 +132,7 @@ $(document).ready(function(){
   $(".start-button").click(function (){
     getGame();
   })
+  $(".reset-button").click(resetGames);
 
   $(window).resize(sizeCheck);
 

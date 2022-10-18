@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>What Game to Play</title>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="css/icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/what2play.css">
 </head>
@@ -11,34 +11,51 @@
 
 <div class="container ">
     <div class="container row text-center">
+
         <div class="div-line"></div>
         <div class="div-line"></div>
+
         <h1 class="col-md">今天玩什么游戏🤔</h1>
+
         <div class="div-line"></div>
+
         <div class="game-list text-center">
-            <!--        <div class="input-group mb-3 game-block">-->
-            <!--            <span class="input-group-text game-title">英雄联盟</span>-->
-            <!--            <button class="btn btn-outline-secondary score score-high score-selected" type="button">很想玩😍</button>-->
-            <!--            <button class="btn btn-outline-secondary score score-mid" type="button">有点想玩😃</button>-->
-            <!--            <button class="btn btn-outline-secondary score score-low" type="button">玩也行🙂</button>-->
-            <!--            <button class="btn btn-outline-secondary score score-zero" type="button">不想玩了🙁</button>-->
-            <!--            <button class="btn btn-outline-secondary score score-delete" type="button">🐶都不玩，删了！<i class="bi bi-x"></i></button>-->
-            <!--        </div>-->
+
         </div>
+
         <div class="div-line"></div>
+
         <div class="input-group mb-3 add-game-block">
             <input type="text" class="form-control" placeholder="玩个新的😋">
             <button class="btn btn-outline-secondary add-game" type="button" id="button-addon2"><i
                     class="bi bi-plus"></i>
             </button>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item reset-button" href="#">重置</a></li>
+            </ul>
+
         </div>
+
         <div class="div-line"></div>
+
         <div class="">
             <button type="button" class="btn btn-primary start-button">开始！</button>
         </div>
+
         <div class="div-line"></div>
+
         <div class="result-block">
             今天玩：<span class="game-title-result">英雄联盟！</span>
+        </div>
+
+        <div class="py-3 my-3 fixed-bottom">
+            <footer>
+                <p class="text-center text-muted">Made by DBP.</p>
+            </footer>
         </div>
 
     </div>
@@ -46,6 +63,10 @@
 
 </body>
 <script src="js/jquery-3.6.1.min.js"></script>
-<script src="js/bootstrap/bootstrap.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!--<script src="js/bootstrap/bootstrap.bundle.min.js"></script>-->
+
+<script src="js/cookie-config.js"></script>
 <script src="js/what2play.js"></script>
 </html>
