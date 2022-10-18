@@ -2,9 +2,9 @@
 let game_list = ['英雄联盟', '守望先锋', 'APEX'];
 let game_dict = {};
 let score_dict = {
-  "high": 9,
-  "mid": 3,
-  "low": 1,
+  "high": 8,
+  "mid": 4,
+  "low": 2,
 };
 let cnt = 0;
 
@@ -44,7 +44,7 @@ function getGame() {
     sum += s;
     ranges.push(sum);
   }
-  let res = Math.floor(Math.random() * sum);
+  let res = Math.random() * sum;
   let ind = 0;
   for (let r of ranges) {
     if (res < r) {
