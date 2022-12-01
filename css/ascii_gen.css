@@ -1,0 +1,56 @@
+
+.div-line {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.input-img-block {
+    text-align: right;
+    margin-right: 20px;
+}
+
+#input-img {
+    max-width: 100%;
+}
+
+.setting-block {
+    text-align: left;
+    margin-left: 20px;
+}
+
+.select-button {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.gen-button {
+    width: 150px;
+    height: 80px;
+    font-size: 24px;
+}
+
+.setting-block .input-group {
+    width: 150px;
+}
+
+.col-block {
+    margin-bottom: 20px;
+}
+
+.thresh-comment {
+    width: 150px;
+    text-align: right;
+    color: #888888;
+}
+
+.output-text-block {
+    margin-top: 50px;
+}
+
+.output-text-block p {
+    line-height: 1.25;
+}
+
+footer {
+    text-align: right;
+}
