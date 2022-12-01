@@ -25,19 +25,33 @@
                 </div>
                 <div class="col setting-block">
 
+                    <div class="dropdown type-block">
+                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false" value="0">
+                            生成方法
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" id="dot-based">点深度二值化（一般用于二刺螈）</a></li>
+                            <li><a class="dropdown-item" id="block-based">块深度</a></li>
+                            <li><a class="dropdown-item"
+                                   id="block-based-equalized">均衡化的块深度（如果对比度一般请用这个）</a></li>
+                        </ul>
+                    </div>
+
                     <div class="input-group col-block">
                         <span class="input-group-text">列数</span>
                         <input id="col-value" type="text" class="form-control" value="50">
                     </div>
+                    <p class="block-comment col-comment">字符画的宽度</p>
+
 
                     <div class="input-group">
                         <span class="input-group-text">阈值</span>
-                        <input id="thresh-value" type="text" class="form-control" value="50">
+                        <input id="thresh-value" type="text" class="form-control" value="170">
 
                     </div>
 
-                    <p class="thresh-comment">0-255</p>
-
+                    <p class="block-comment thresh-comment">0-255</p>
 
 
                     <input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)"
@@ -53,16 +67,16 @@
             <div class="div-line"></div>
             <div class="div-line"></div>
 
-            <div class="output-text-block">
-                <div id="output-text">
-                    <p></p>
-                </div>
-            </div>
-
 
         </div>
 
 
+    </div>
+
+</div>
+<div class="output-text-block text-center">
+    <div id="output-text">
+        <p></p>
     </div>
 </div>
 <div class="py-3 my-3 fixed-bottom container">
@@ -71,7 +85,10 @@
     </footer>
 </div>
 </body>
+
 <script src="js/jquery-3.6.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap/bootstrap.js"></script>
 <script>
     let isCvLoaded = false;
 

@@ -29,15 +29,22 @@
     font-size: 24px;
 }
 
+.type-block button {
+    width: 150px;
+    background-color: #eeeeee;
+    margin-bottom: 20px;
+    height: 50px;
+}
+
 .setting-block .input-group {
     width: 150px;
 }
 
-.col-block {
+.col-comment {
     margin-bottom: 20px;
 }
 
-.thresh-comment {
+.block-comment {
     width: 150px;
     text-align: right;
     color: #888888;
