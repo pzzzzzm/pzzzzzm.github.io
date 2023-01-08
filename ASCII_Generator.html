@@ -22,6 +22,7 @@
             <div class="row">
                 <div class="col input-img-block">
                     <img src="src/nijika.jpg" id="input-img"/>
+                    <img src="src/nijika.jpg" id="raw-img" hidden/>
                 </div>
                 <div class="col setting-block">
 
@@ -32,9 +33,11 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" id="dot-based">点深度二值化（一般用于二刺螈）</a></li>
+                            <li><a class="dropdown-item" id="edge-based">基于边缘检测的二值化</a></li>
                             <li><a class="dropdown-item" id="block-based">块深度</a></li>
                             <li><a class="dropdown-item"
                                    id="block-based-equalized">均衡化的块深度（如果对比度一般请用这个）</a></li>
+
                         </ul>
                     </div>
 
@@ -105,6 +108,8 @@
     var loadFile = function (event) {
         var image = document.getElementById('input-img');
         image.src = URL.createObjectURL(event.target.files[0]);
+        var imageRaw = document.getElementById('raw-img');
+        imageRaw.src = URL.createObjectURL(event.target.files[0]);
     };
 
 </script>

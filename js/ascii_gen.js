@@ -5,6 +5,12 @@ $('#dot-based').on('click', function (){
     $('.thresh-comment').html('0-255');
 })
 
+$('#edge-based').on('click', function (){
+    $('.type-block button').val(3).html('边缘二值化');
+    $('#thresh-value').removeAttr('disabled');
+    $('.thresh-comment').html('0-255');
+})
+
 $('#block-based').on('click', function (){
     $('.type-block button').val(1).html('块深度');
     $('#thresh-value').attr('disabled', 'disabled');
@@ -19,7 +25,7 @@ $('#block-based-equalized').on('click', function (){
 
 
 function getInput() {
-    return cv.imread('input-img');
+    return cv.imread('raw-img');
 }
 
 function processImgMat(mat, row) {
@@ -80,6 +86,32 @@ function preprocessing(mat) {
     return convertGray(mat);
 }
 
+function edgeDetect(mat) {
+    let edgeMat = new cv.Mat();
+    cv.Canny(mat, edgeMat, 50, 200);
+
+    let dilatedMat = new cv.Mat();
+    let M = cv.Mat.ones(3, 3, cv.CV_8U);
+    let anchor = new cv.Point(-1, -1);
+    cv.dilate(edgeMat, dilatedMat, M, anchor, 1, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+
+    edgeMat.delete();
+    M.delete();
+
+    let n = dilatedMat.size()['width'] * dilatedMat.size()['height'];
+    for (let x = 0; x < n; x ++) {
+        if (dilatedMat.data[x] === 0) {
+            dilatedMat.data[x] = 255;
+        }
+        else {
+            dilatedMat.data[x] = 0;
+        }
+    }
+
+    return dilatedMat;
+
+}
+
 function dotBasedConvert(img_char, thresh) {
     let w = img_char.size()['width'];
     let h = img_char.size()['height'];
@@ -104,6 +136,7 @@ function dotBasedConvert(img_char, thresh) {
 
     return res;
 }
+
 
 function blockBasedConvert(img_char, is_equalized) {
 
@@ -170,7 +203,16 @@ function convertImage() {
     let conv_type = $('.type-block button').val();
 
     let img = getInput();
-    let img_g = preprocessing(img);
+
+    let img_g;
+
+    switch (conv_type){
+        case '3':
+            img_g = edgeDetect(img); break;
+        default:
+            img_g = preprocessing(img);
+    }
+
     img.delete();
 
     let img_char = processImgMat(img_g, row);
@@ -182,6 +224,7 @@ function convertImage() {
         case '0': res = dotBasedConvert(img_char, thresh); break;
         case '1': res = blockBasedConvert(img_char, 0); break;
         case '2': res = blockBasedConvert(img_char, 1); break;
+        case '3': res = dotBasedConvert(img_char, thresh); break;
     }
 
     img_char.delete();
