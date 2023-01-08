@@ -98,17 +98,28 @@ function edgeDetect(mat) {
     edgeMat.delete();
     M.delete();
 
-    let n = dilatedMat.size()['width'] * dilatedMat.size()['height'];
-    for (let x = 0; x < n; x ++) {
-        if (dilatedMat.data[x] === 0) {
-            dilatedMat.data[x] = 255;
-        }
-        else {
-            dilatedMat.data[x] = 0;
-        }
-    }
+    let w = dilatedMat.size()['width'];
+    let h = dilatedMat.size()['height'];
+    let tempArr = new Array(w*h).fill(255);
+    let tempMat = cv.matFromArray(h, w, cv.CV_8U, tempArr);
+    let complMat = new cv.Mat();
+    let mask = new cv.Mat();
+    cv.subtract(tempMat, dilatedMat, complMat, mask, -1);
 
-    return dilatedMat;
+    tempMat.delete();
+    dilatedMat.delete();
+    mask.delete();
+
+    // for (let x = 0; x < n; x ++) {
+    //     if (dilatedMat.data[x] === 0) {
+    //         dilatedMat.data[x] = 255;
+    //     }
+    //     else {
+    //         dilatedMat.data[x] = 0;
+    //     }
+    // }
+
+    return complMat;
 
 }
 
