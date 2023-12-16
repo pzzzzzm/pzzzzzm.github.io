@@ -1,0 +1,32 @@
+
+
+.title-margin {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.decoding-options {
+    display: inline-block;
+    /* width: 40%; */
+    margin-bottom: 20px;
+}
+
+.inline-element {
+    display: inline;
+}
+
+.result-row {
+    border: 1px solid #dddddd;
+}
+
+.card-text {
+    margin-bottom: 8px;
+}
+
+
+#show-hide {
+    width: 30%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    
+}

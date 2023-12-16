@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Decoder</title>
+
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/caesar.css">
+</head>
+<body>
+<div class="container">
+
+    <h1 class="text-center title-margin">Caesar Cipher Decoder</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <textarea class="form-control" id="floatingTextarea" style="height: 100px;">LMKWLM BPQA BMFB</textarea>
+                <label for="floatingTextarea">Enter the encoded message:</label>
+            </div>
+            
+            <div class="row">
+            <div class="mb-3"></div>
+            <div class="col-6 form-group decoding-options">
+                <div class="input-group">
+                    <span class="input-group-text">Shift Steps:</span>
+                    <input type="text" class="form-control" placeholder="1" value="1" aria-label="from-shift">
+                    <span class="input-group-text">to</span>
+                    <input type="text" class="form-control" placeholder="25" value="25" aria-label="to-shift">
+                  </div>
+            </div>
+            <!-- <div class="col-md-auto"></div> -->
+            <div class="col-6">
+                <button type="button" class="btn btn-primary" id="decode" style="float: right;">Decode</button>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Decoded Message</h5>
+                </div>
+                <div id="result">
+                    <div class="card-body result-row">
+                        <p class="card-text">Please enter a message and click decode.</p>
+                    </div>
+                </div>
+                <div id="more-results" class="collapse multi-collapse"></div>
+            </div>
+            <div class="text-center sh-button">
+                <button type="button" id="show-hide" class="btn btn-light" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="more-results">Show all</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-3.6.1.min.js"></script>
+<script src="js/bootstrap/bootstrap.js"></script>
+<script src="js/freq_words.js"></script>
+<script src="js/caesar.js"></script>
+</body>
+</html>
