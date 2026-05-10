@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rotation Gray Code · Stamp Foldings &amp; Semi-meanders — IWOCA 2024</title>
+  <title>2-Gray Codes for Grand Motzkin / Grand Dyck Paths — LATIN 2026</title>
   <script src="../../../assets/js/theme.js"></script>
   <link rel="stylesheet" href="../../../assets/css/app-chrome.css">
   <link rel="stylesheet" href="style.css">
@@ -12,14 +12,14 @@
 
 <div class="stage-wrap">
   <div class="viz-wrap">
-    <div class="pane pane-fold">
+    <div class="pane pane-walk">
       <svg id="stage" preserveAspectRatio="xMidYMid meet"></svg>
-      <span class="pane-label">meander</span>
+      <span class="pane-label">lattice walk</span>
     </div>
     <div class="pane-divider"></div>
-    <div class="pane pane-ladder">
-      <svg id="ladder-stage" preserveAspectRatio="xMidYMid meet"></svg>
-      <span class="pane-label">recursion tree branch</span>
+    <div class="pane pane-decomp">
+      <svg id="decomp-stage" preserveAspectRatio="xMidYMid meet"></svg>
+      <span class="pane-label">α / β / γ decomposition</span>
     </div>
   </div>
   <section class="thumbs-section open">
@@ -52,13 +52,13 @@
   <div id="algo-picker-mount"></div>
   <script type="module">
     import { renderAlgoPicker } from '../algo-nav.js?v=algonav2';
-    renderAlgoPicker(document.getElementById('algo-picker-mount'), 'iwoca');
+    renderAlgoPicker(document.getElementById('algo-picker-mount'), 'motzkin');
   </script>
 
   <h2 class="section-label">Mode</h2>
   <div class="mode-toggle">
-    <label><input type="radio" name="mode" value="stamp" checked>stamp</label>
-    <label><input type="radio" name="mode" value="semi">semi-meander</label>
+    <label><input type="radio" name="mode" value="motzkin" checked>grand Motzkin</label>
+    <label><input type="radio" name="mode" value="dyck">grand Dyck</label>
   </div>
 
   <h2 class="section-label">Parameters</h2>
@@ -94,14 +94,14 @@
   <h2 class="section-label">Links</h2>
   <ul class="links">
     <li>
-      <a href="https://github.com/pzzzzzm/MyCodes/tree/main/PaperCodes/(IWOCA%202023)_stamp_foldings_and_semi-meanders_rotation_gray_codes" target="_blank" rel="noopener">
+      <a href="https://github.com/pzzzzzm/MyCodes/tree/main/PaperCodes/(LATIN%202026)_motzkin_paths_2-gray_codes" target="_blank" rel="noopener">
         code on GitHub
         <svg class="link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h6v6"/><path d="M11.5 4.5L4.5 11.5"/></svg>
       </a>
     </li>
     <li>
-      <a href="https://arxiv.org/abs/2411.05458" target="_blank" rel="noopener">
-        paper on arXiv
+      <a href="#" target="_blank" rel="noopener" class="link-pending">
+        paper (TBD)
         <svg class="link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h6v6"/><path d="M11.5 4.5L4.5 11.5"/></svg>
       </a>
     </li>
@@ -110,6 +110,6 @@
 
 <div class="dbp-watermark">DBP.</div>
 
-<script type="module" src="app.js?v=iwoca3"></script>
+<script type="module" src="app.js?v=latin8"></script>
 </body>
 </html>

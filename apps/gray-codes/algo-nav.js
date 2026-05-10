@@ -25,9 +25,9 @@ export const algorithms = [
   },
   {
     id: 'motzkin',
-    name: 'Grand Motzkin / Dyck',
+    name: 'Grand Motzkin &amp; Dyck Paths with Air Pockets',
     tag:  'LATIN 2026',
-    dim: true,
+    href: '../latin-grand-motzkin/',
   },
   {
     id: 'fib',

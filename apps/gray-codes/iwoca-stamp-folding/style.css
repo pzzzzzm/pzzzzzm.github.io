@@ -2,8 +2,9 @@
    Page-level color tokens come from app-chrome.css and respond to
    data-theme. App-specific tokens are defined here. */
 :root {
-  --bg-locked: rgba(250, 204, 21, 0.13);
+  --bg-locked: rgba(250, 204, 21, 0.22);
   --border-locked: rgba(202, 138, 4, 0.32);
+  --bg-active: rgba(99, 102, 241, 0.14);   /* lavender — current rotate level */
   --edge: #6f6e68;
   --edge-old: #c84f3e;
   --edge-new: #2d8856;
@@ -13,6 +14,7 @@
 :root[data-theme="dark"] {
   --bg-locked: rgba(250, 204, 21, 0.10);
   --border-locked: rgba(202, 138, 4, 0.45);
+  --bg-active: rgba(165, 180, 252, 0.16);  /* lighter lavender on dark bg */
   --edge: #aaa8a0;
   --edge-old: #e07a6c;
   --edge-new: #5fbf86;
@@ -436,16 +438,16 @@ html, body {
   stroke-dasharray: 2 3;
 }
 .tree-row-band {
-  fill: var(--bg-soft);
+  fill: var(--bg-active);
   rx: 6;
   ry: 6;
-  opacity: 0.7;
+  opacity: 1;
 }
 .tree-row-flip {
   fill: var(--bg-locked);
   rx: 6;
   ry: 6;
-  opacity: 0.5;
+  opacity: 1;
 }
 .tree-q-glyph {
   font: 600 14px var(--font-mono);

@@ -9,7 +9,7 @@
   --edge-new: #2d8856;
   --root-fill: var(--text-primary);
   --bg-glass: rgba(255, 255, 255, 0.78);
-  --poly-bg-edge: rgba(0, 0, 0, 0.08);
+  --poly-bg-edge: rgba(0, 0, 0, 0.22);
 }
 
 :root[data-theme="dark"] {
