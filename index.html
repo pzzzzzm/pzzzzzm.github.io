@@ -3,16 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>TempIndex</title>
+    <script src="./assets/js/theme.js"></script>
+    <link rel="stylesheet" href="./assets/css/app-chrome.css">
+    <style>
+      :root[data-theme="dark"] a { color: #85b7eb; }
+      :root[data-theme="dark"] a:visited { color: #c8a8e9; }
+    </style>
 </head>
 <body>
 
-<a href="./What2Play.html">What to play today</a>
+<button class="theme-toggle" style="position: fixed; top: 16px; right: 16px;" aria-label="toggle theme" title="toggle theme">
+  <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+</button>
+
+<a href="./apps/what2play/">What to play today</a>
 <br/>
-<a href="./ASCII_Generator.html">ASCII Art Generator</a>
+<a href="./apps/ascii-generator/">ASCII Art Generator</a>
 <br/>
-<a href="./Caesar_Cipher.html">Caesar Cipher Decoder</a>
+<a href="./apps/caesar-cipher/">Caesar Cipher Decoder</a>
+<br/>
+<a href="./apps/gray-codes/">Combinatorial Gray Codes</a>
+<br/>
+<a href="./apps/llm-speed/">LLM Thinking Speed Simulator</a>
 </body>
 <script type="text/javascript">
-    // window.location.href = "/What2Play.html";
+    // window.location.href = "/apps/what2play/";
 </script>
 </html>

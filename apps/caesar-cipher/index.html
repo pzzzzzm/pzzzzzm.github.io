@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Decoder</title>
+
+    <script src="../../assets/js/theme.js"></script>
+    <link rel="stylesheet" href="../../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../assets/css/app-chrome.css">
+    <link rel="stylesheet" href="caesar.css">
+</head>
+<body>
+<div class="chrome-bar" style="position: absolute; top: 16px; left: 16px; display: inline-flex; gap: 8px; z-index: 50;">
+  <a class="app-home" href="../../">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4l-4 4 4 4"/></svg>
+    home
+  </a>
+  <button class="theme-toggle" aria-label="toggle theme" title="toggle theme">
+    <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+  </button>
+</div>
+<div class="container">
+
+    <h1 class="text-center title-margin">Caesar Cipher Decoder</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <textarea class="form-control" id="floatingTextarea" style="height: 100px;">LMKWLM BPQA BMFB</textarea>
+                <label for="floatingTextarea">Enter the encoded message:</label>
+            </div>
+            
+            <div class="row">
+            <div class="mb-3"></div>
+            <div class="col-6 form-group decoding-options">
+                <div class="input-group">
+                    <span class="input-group-text">Shift Steps:</span>
+                    <input type="text" class="form-control" placeholder="1" value="1" aria-label="from-shift">
+                    <span class="input-group-text">to</span>
+                    <input type="text" class="form-control" placeholder="25" value="25" aria-label="to-shift">
+                  </div>
+            </div>
+            <!-- <div class="col-md-auto"></div> -->
+            <div class="col-6">
+                <button type="button" class="btn btn-primary" id="decode" style="float: right;">Decode</button>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Decoded Message</h5>
+                </div>
+                <div id="result">
+                    <div class="card-body result-row">
+                        <p class="card-text">Please enter a message and click decode.</p>
+                    </div>
+                </div>
+                <div id="more-results" class="collapse multi-collapse"></div>
+            </div>
+            <div class="text-center sh-button">
+                <button type="button" id="show-hide" class="btn btn-light" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="more-results">Show all</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dbp-watermark">DBP.</div>
+
+<script src="../../assets/js/jquery-3.6.1.min.js"></script>
+<script src="../../assets/js/bootstrap/bootstrap.js"></script>
+<script src="freq_words.js"></script>
+<script src="caesar.js"></script>
+</body>
+</html>

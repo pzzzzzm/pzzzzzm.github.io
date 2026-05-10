@@ -1,0 +1,207 @@
+/* Shared chrome for pzzzzzm.github.io apps.
+   Provides:
+     - Site-wide color tokens (light + [data-theme="dark"] variants)
+     - Shared font stack
+     - .app-home pill (top-left of each app)
+     - .theme-toggle button (sibling of .app-home)
+     - .dbp-watermark (bottom-right of each app)
+
+   Apps that have their own bespoke palette (llm-speed, gray-codes/...) should
+   reference --bg-page / --text-primary / --bg-soft / etc. so the dark-mode
+   toggle automatically updates them. */
+
+/* ----- Color tokens ----- */
+:root {
+  --bg-page:       #faf9f5;
+  --bg-card:       #ffffff;
+  --bg-soft:       #f1efe8;
+  --text-primary:  #1a1a18;
+  --text-secondary:#5f5e5a;
+  --text-tertiary: #9a988f;
+  --border-faint:  rgba(0, 0, 0, 0.06);
+  --border-mid:    rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  --accent:        #1a1a18;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+               "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "SF Mono", Monaco, Menlo, "Courier New", monospace;
+}
+
+:root[data-theme="dark"] {
+  --bg-page:       #1a1a18;
+  --bg-card:       #26261f;
+  --bg-soft:       #2c2c2a;
+  --text-primary:  #f1efe8;
+  --text-secondary:#b4b2a9;
+  --text-tertiary: #888780;
+  --border-faint:  rgba(255, 255, 255, 0.08);
+  --border-mid:    rgba(255, 255, 255, 0.18);
+  --border-strong: rgba(255, 255, 255, 0.28);
+  --accent:        #f1efe8;
+}
+
+/* Default page styling — apps that import this CSS automatically get the
+   right page bg and text color in both modes. Apps with custom-styled body
+   can override but will inherit the tokens. */
+html, body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+/* ----- Home pill (top-left navigation back to /) ----- */
+.app-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 8px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: inherit;
+  opacity: 0.65;
+  text-decoration: none;
+  background: transparent;
+  border: 0.5px solid rgba(128, 128, 128, 0.35);
+  border-radius: 999px;
+  transition: opacity 0.15s, background 0.15s, border-color 0.15s;
+}
+.app-home:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.08);
+  border-color: rgba(128, 128, 128, 0.55);
+  text-decoration: none;
+}
+.app-home svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ----- Theme toggle (sun/moon icon button next to .app-home) ----- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0.5px solid rgba(128, 128, 128, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.15s, background 0.15s, border-color 0.15s,
+              transform 0.2s;
+  font: inherit;
+}
+.theme-toggle:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.08);
+  border-color: rgba(128, 128, 128, 0.55);
+}
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle svg { width: 13px; height: 13px; }
+
+/* Show the moon in light mode (clicking goes to dark), sun in dark mode. */
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+/* ----- DBP. watermark (bottom-right of each app) ----- */
+.dbp-watermark {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: inherit;
+  /* Light-bg default; dark-themed apps override down to ~0.22 because the
+     contrast against a dark canvas is already high. */
+  opacity: 0.4;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 100;
+}
+:root[data-theme="dark"] .dbp-watermark {
+  opacity: 0.25;
+}
+
+/* ----- Bootstrap 5.2 dark-mode shims -----
+   Bootstrap 5.2 predates `data-bs-theme` so the framework doesn't auto-dark.
+   We override the most-used components so input boxes / cards / outline
+   buttons read correctly in dark mode without forking Bootstrap itself.
+   Effects: text + bg colors track our tokens; user input styling stays
+   consistent across themes. */
+:root[data-theme="dark"] body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .form-control,
+:root[data-theme="dark"] .form-select,
+:root[data-theme="dark"] .input-group-text {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-mid);
+}
+:root[data-theme="dark"] .form-control:focus,
+:root[data-theme="dark"] .form-select:focus {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.08);
+}
+:root[data-theme="dark"] .form-control::placeholder {
+  color: var(--text-tertiary);
+}
+:root[data-theme="dark"] .form-floating > label {
+  color: var(--text-tertiary);
+}
+:root[data-theme="dark"] .btn-light,
+:root[data-theme="dark"] .btn-outline-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-mid);
+}
+:root[data-theme="dark"] .btn-light:hover,
+:root[data-theme="dark"] .btn-outline-secondary:hover,
+:root[data-theme="dark"] .btn-outline-secondary:focus {
+  background: var(--bg-soft);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+:root[data-theme="dark"] .card {
+  background: var(--bg-card);
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .card-header {
+  background: var(--bg-soft);
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .dropdown-menu {
+  background: var(--bg-card);
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .dropdown-item {
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .dropdown-item:hover,
+:root[data-theme="dark"] .dropdown-item:focus {
+  background: var(--bg-soft);
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4,
+:root[data-theme="dark"] h5,
+:root[data-theme="dark"] h6,
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] label {
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .text-muted {
+  color: var(--text-tertiary) !important;
+}

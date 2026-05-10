@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Art Generator</title>
+    <script src="../../assets/js/theme.js"></script>
+    <link rel="stylesheet" href="../../assets/css/app-chrome.css">
+    <link rel="stylesheet" href="ascii_gen.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="chrome-bar">
+    <a class="app-home" href="../../">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4l-4 4 4 4"/></svg>
+      home
+    </a>
+    <button class="theme-toggle" aria-label="toggle theme" title="toggle theme">
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+    </button>
+  </div>
+
+  <h1 class="app-title">图片转 ASCII Art</h1>
+
+  <h2 class="section-label">生成方法</h2>
+  <div class="method-list">
+    <label class="method-row">
+      <input type="radio" name="method" value="0" checked>
+      <span class="method-label">
+        <span class="method-name">点阵阈值法</span>
+        <span class="method-hint">通用，对二刺螈尤其友好</span>
+      </span>
+    </label>
+    <label class="method-row">
+      <input type="radio" name="method" value="3">
+      <span class="method-label">
+        <span class="method-name">点阵边缘法</span>
+        <span class="method-hint">Canny 边缘检测 + 点阵</span>
+      </span>
+    </label>
+    <label class="method-row">
+      <input type="radio" name="method" value="1">
+      <span class="method-label">
+        <span class="method-name">块阵灰度法</span>
+        <span class="method-hint">8 阶灰度，无阈值</span>
+      </span>
+    </label>
+    <label class="method-row">
+      <input type="radio" name="method" value="2">
+      <span class="method-label">
+        <span class="method-name">块阵均衡法</span>
+        <span class="method-hint">直方图均衡 + 块阵，对比度差时用</span>
+      </span>
+    </label>
+  </div>
+
+  <h2 class="section-label">参数</h2>
+  <div class="slider-field">
+    <div class="slider-head">
+      <label for="width-input">宽度</label>
+      <input id="width-input" type="number" min="20" max="200" value="75">
+    </div>
+    <input id="width-range" type="range" min="20" max="200" value="75">
+    <div class="slider-hint">字符画的宽度（列数）</div>
+  </div>
+
+  <div class="slider-field" id="thresh-field">
+    <div class="slider-head">
+      <label for="thresh-input">阈值</label>
+      <input id="thresh-input" type="number" min="0" max="255" value="185">
+    </div>
+    <input id="thresh-range" type="range" min="0" max="255" value="185">
+    <div class="slider-hint" id="thresh-hint">0–255，仅适用于点阵法</div>
+  </div>
+
+  <h2 class="section-label">实时</h2>
+  <div class="toggle-row">
+    <span class="toggle-label">
+      <span class="main">拖动即时更新</span>
+      <span class="hint" id="realtime-hint">慢机器可以关掉，避免卡顿</span>
+    </span>
+    <label class="switch">
+      <input type="checkbox" id="realtime-toggle" checked>
+      <span class="slider-sw"></span>
+    </label>
+  </div>
+
+  <h2 class="section-label">操作</h2>
+  <div class="actions">
+    <input type="file" accept="image/*" name="image" id="file" style="display: none;">
+    <label class="btn-row btn-secondary" for="file">选择图片</label>
+    <div class="row-2">
+      <button class="btn-row btn-secondary" id="reset-btn">重置参数</button>
+      <button class="btn-row btn-secondary" id="copy-btn">复制结果</button>
+    </div>
+    <button class="btn-row btn-primary" id="generate-btn">等待 OpenCV 加载…</button>
+  </div>
+</aside>
+
+<div class="layout-divider"></div>
+
+<main class="main-stage">
+  <section class="preview-card">
+    <span class="pane-label">source</span>
+    <img src="images/nijika.jpg" id="input-img" alt="source image">
+    <img src="images/nijika.jpg" id="raw-img" hidden>
+  </section>
+
+  <section class="output-card">
+    <span class="pane-label">ASCII output</span>
+    <pre id="output-text"></pre>
+  </section>
+</main>
+
+<div class="dbp-watermark">DBP.</div>
+
+<script src="../../assets/js/jquery-3.6.1.min.js"></script>
+<script>
+  // Hooks for the preview image click → file picker
+  $('#input-img').click(function () { document.getElementById('file').click(); });
+
+  let isCvLoaded = false;
+  function cvLoaded() {
+    isCvLoaded = true;
+    console.log('OpenCV loaded.');
+    document.getElementById('generate-btn').textContent = '生成';
+    document.getElementById('generate-btn').classList.remove('btn-secondary');
+    document.getElementById('generate-btn').classList.add('btn-primary');
+    // Trigger an initial render so users see something on first paint
+    if (typeof scheduleRender === 'function') scheduleRender();
+  }
+
+  // Image load handler — invalidates cached mats
+  function onFileSelected(event) {
+    const url = URL.createObjectURL(event.target.files[0]);
+    const img = document.getElementById('input-img');
+    const raw = document.getElementById('raw-img');
+    img.src = url;
+    raw.src = url;
+    raw.onload = () => { if (typeof invalidateCache === 'function') invalidateCache(); if (typeof scheduleRender === 'function') scheduleRender(); };
+  }
+  document.getElementById('file').addEventListener('change', onFileSelected);
+</script>
+<script async src="https://docs.opencv.org/4.5.0/opencv.js" onload="cvLoaded();" type="text/javascript"></script>
+<script src="ascii_gen.js"></script>
+
+</body>
+</html>

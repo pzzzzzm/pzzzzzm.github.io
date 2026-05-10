@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <title>What Game to Play</title>
+    <script src="../../assets/js/theme.js"></script>
+    <link rel="stylesheet" href="../../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../assets/icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../assets/css/app-chrome.css">
+    <link rel="stylesheet" href="what2play.css">
+</head>
+<body>
+
+<div class="chrome-bar" style="position: absolute; top: 16px; left: 16px; display: inline-flex; gap: 8px; z-index: 50;">
+  <a class="app-home" href="../../">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4l-4 4 4 4"/></svg>
+    home
+  </a>
+  <button class="theme-toggle" aria-label="toggle theme" title="toggle theme">
+    <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+  </button>
+</div>
+
+<div class="container ">
+    <div class="container row text-center">
+
+        <div class="div-line"></div>
+        <div class="div-line"></div>
+
+        <h1 class="col-md">今天玩什么游戏🤔</h1>
+
+        <div class="div-line"></div>
+
+        <div class="game-list text-center">
+
+        </div>
+
+        <div class="div-line"></div>
+
+        <div class="input-group mb-3 add-game-block">
+            <input type="text" class="form-control" placeholder="玩个新的😋">
+            <button class="btn btn-outline-secondary add-game" type="button" id="button-addon2"><i
+                    class="bi bi-plus"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item reset-button" href="#">重置</a></li>
+            </ul>
+
+        </div>
+
+        <div class="div-line"></div>
+
+        <div class="">
+            <button type="button" class="btn btn-primary start-button">开始！</button>
+        </div>
+
+        <div class="div-line"></div>
+
+        <div class="result-block">
+            今天玩：<span class="game-title-result">英雄联盟！</span>
+        </div>
+
+    </div>
+</div>
+
+<div class="dbp-watermark">DBP.</div>
+
+</body>
+<script src="../../assets/js/jquery-3.6.1.min.js"></script>
+<script src="../../assets/js/popper.min.js"></script>
+<script src="../../assets/js/bootstrap/bootstrap.min.js"></script>
+
+<script src="cookie-config.js"></script>
+<script src="what2play.js"></script>
+</html>

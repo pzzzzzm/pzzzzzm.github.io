@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Thinking Speed Simulator</title>
+<script src="../../assets/js/theme.js"></script>
+<link rel="stylesheet" href="../../assets/css/app-chrome.css">
+<style>
+  :root {
+    /* App-specific tokens. Page-level (--bg-page, --text-primary, etc.)
+       come from app-chrome.css and respond to data-theme. */
+    --bg-secondary: var(--bg-soft);
+    --bg-info: #e6f1fb;
+    --text-info: #0c447c;
+    --border-tertiary: var(--border-faint);
+    --border-secondary: var(--border-mid);
+    --border-info: #185fa5;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  :root[data-theme="dark"] {
+    --bg-info: #042c53;
+    --text-info: #85b7eb;
+    --border-info: #378add;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-home { margin-bottom: 1.25rem; }
+  .dbp-watermark { opacity: 0.22; }
+
+  .simulator { max-width: 720px; margin: 0 auto; }
+
+  h1 { font-size: 22px; font-weight: 500; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem;
+  }
+
+  .preset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    gap: 12px;
+  }
+  .preset-header .heading {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-secondary);
+  }
+  .preset-header .baseline {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: right;
+  }
+
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  button.preset {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    background: transparent;
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text-primary);
+    text-align: left;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  button.preset:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-secondary);
+  }
+
+  button.preset.active {
+    background: var(--bg-info);
+    border-color: var(--border-info);
+    color: var(--text-info);
+  }
+
+  button.preset .sub {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  button.preset.active .sub {
+    color: var(--text-info);
+    opacity: 0.8;
+  }
+
+  .speed-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .speed-row label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    min-width: 60px;
+  }
+
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--border-tertiary);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+
+  .speed-out {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+  }
+
+  .toggle-row .toggle-label { display: flex; flex-direction: column; gap: 2px; }
+  .toggle-row .toggle-label .main { font-size: 14px; font-weight: 500; }
+  .toggle-row .toggle-label .hint { font-size: 12px; color: var(--text-secondary); }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .switch input { opacity: 0; width: 0; height: 0; }
+
+  .slider-sw {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--border-secondary);
+    border-radius: 12px;
+    transition: 0.2s;
+  }
+
+  .slider-sw:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+
+  .switch input:checked + .slider-sw { background: var(--border-info); }
+  .switch input:checked + .slider-sw:before { transform: translateX(20px); }
+
+  .controls { display: flex; gap: 8px; margin-bottom: 1.25rem; }
+
+  button.action {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    border: 0.5px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: background 0.15s, transform 0.05s;
+  }
+
+  button.action:hover { background: var(--bg-secondary); }
+  button.action:active { transform: scale(0.98); }
+  button.action svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .user-msg {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .label-tag {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .user-msg .content { font-size: 14px; }
+
+  #thinking-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  #thinking-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  #thinking-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  #thinking-meta {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-left: auto;
+  }
+
+  #chevron { color: var(--text-secondary); transition: transform 0.2s; }
+  #thinking-card.collapsed #thinking-body { display: none; }
+  #thinking-card.collapsed #chevron { transform: rotate(-90deg); }
+
+  #thinking-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  #thinking-body::-webkit-scrollbar { width: 4px; }
+  #thinking-body::-webkit-scrollbar-thumb {
+    background: var(--border-tertiary);
+    border-radius: 2px;
+  }
+
+  #answer-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  .answer-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+
+  #answer-body {
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  #answer-body code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--bg-secondary);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  .cursor::after {
+    content: '▊';
+    opacity: 0.5;
+    animation: blink 1s infinite;
+    margin-left: 2px;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+  .stat {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.8rem;
+  }
+
+  .stat .stat-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+  }
+
+  .stat .stat-value { font-size: 14px; font-weight: 500; font-family: var(--font-mono); }
+  .stat.disabled .stat-value { color: var(--text-tertiary); }
+
+  .footnote {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 1.25rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 480px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    body { padding: 1rem 0.75rem; }
+    .preset-header { flex-direction: column; gap: 4px; }
+    .preset-header .baseline { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="simulator">
+  <div class="chrome-bar" style="display: inline-flex; gap: 8px; margin-bottom: 1.25rem;">
+    <a class="app-home" href="../../">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4l-4 4 4 4"/></svg>
+      home
+    </a>
+    <button class="theme-toggle" aria-label="toggle theme" title="toggle theme">
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+    </button>
+  </div>
+
+  <h1>LLM Thinking 速度模拟器</h1>
+  <p class="subtitle">体验不同硬件下，本地大模型 thinking + 回答的真实节奏。</p>
+
+  <div class="preset-header">
+    <span class="heading">Hardware preset</span>
+    <span class="baseline">基准模型：Qwen 3.6-27B (dense)</span>
+  </div>
+
+  <div class="presets">
+    <button class="preset" data-tps="10">10 tok/s<span class="sub">M5 Pro Q8</span></button>
+    <button class="preset active" data-tps="15">15 tok/s<span class="sub">M5 Pro Q4</span></button>
+    <button class="preset" data-tps="25">25 tok/s<span class="sub">M5 Max Q4</span></button>
+    <button class="preset" data-tps="50">50 tok/s<span class="sub">RTX 5090</span></button>
+    <button class="preset" data-tps="100">100 tok/s<span class="sub">Cloud API</span></button>
+  </div>
+
+  <div class="speed-row">
+    <label>Speed</label>
+    <input type="range" min="3" max="120" value="15" step="1" id="speed">
+    <span class="speed-out" id="speed-out">15 tok/s</span>
+  </div>
+
+  <div class="toggle-row">
+    <div class="toggle-label">
+      <span class="main">Thinking 模式</span>
+      <span class="hint" id="toggle-hint">开启 — 模型先思考再回答</span>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="thinking-toggle" checked>
+      <span class="slider-sw"></span>
+    </label>
+  </div>
+
+  <div class="controls">
+    <button class="action" id="start-btn">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7-4.5z"/></svg>
+      <span>Start</span>
+    </button>
+    <button class="action" id="reset-btn">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8a6 6 0 1 0 1.76-4.24"/><path d="M2 2v4h4"/></svg>
+      <span>Reset</span>
+    </button>
+  </div>
+
+  <div class="user-msg">
+    <div class="label-tag">User</div>
+    <div class="content">写一个 Python 函数，找出列表中第二大的数。</div>
+  </div>
+
+  <div id="thinking-card">
+    <div id="thinking-header">
+      <span style="color: var(--text-secondary);">💡</span>
+      <span id="thinking-label">Thinking…</span>
+      <span id="thinking-meta"></span>
+      <span id="chevron">▼</span>
+    </div>
+    <div id="thinking-body"></div>
+  </div>
+
+  <div id="answer-card">
+    <div class="answer-header">
+      <span class="label-tag" style="margin: 0;">💬 Qwen 3.6-27B (dense)</span>
+    </div>
+    <div id="answer-body"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Phase</div>
+      <div class="stat-value" id="phase-out">Idle</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Elapsed</div>
+      <div class="stat-value" id="time-out">0.0s</div>
+    </div>
+    <div class="stat" id="think-stat">
+      <div class="stat-label">Think tokens</div>
+      <div class="stat-value" id="think-tok">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Answer tokens</div>
+      <div class="stat-value" id="ans-tok">0</div>
+    </div>
+  </div>
+
+  <p class="footnote">硬件预设的 tok/s 数值仅为粗略估算，实际表现受量化、上下文长度、KV cache、batch 等多种因素影响。</p>
+</div>
+
+<div class="dbp-watermark">DBP.</div>
+
+<script>
+(function() {
+  const thinkingText = `好的，用户想找列表中第二大的数。让我想想几种方法。
+
+最直接的方法是排序，然后取倒数第二个元素。但这个方法有几个问题。第一，时间复杂度是 O(n log n)，不是最优。第二，如果列表里有重复的最大值，比如 [5, 5, 3, 1]，排序后倒数第二是 5，但用户可能期望的是 3。
+
+所以我需要先和用户确认一下"第二大"的定义。不过题目没说，我先按"严格第二大"来处理，也就是去重后的第二大，这是更常见的需求。
+
+更好的方法是一次遍历，维护两个变量：最大值和次大值。遍历时，如果当前元素大于最大值，把最大值赋给次大值，再更新最大值；如果当前元素小于最大值但大于次大值，更新次大值；等于最大值的情况要跳过，避免重复。
+
+时间复杂度 O(n)，空间复杂度 O(1)，这是最优解。
+
+边界情况要考虑：列表长度小于 2 怎么办？所有元素都相同怎么办？我应该返回 None 或抛异常。我倾向于返回 None 并加上类型注解，更 Pythonic。
+
+初始化用 float('-inf') 比较稳妥，避免列表里有负数时的问题。
+
+让我写代码……`;
+
+  const thinkingAnswer = `这是一个经典问题，我推荐用一次遍历的解法，时间复杂度 O(n)，空间复杂度 O(1)：
+
+\`\`\`python
+def second_largest(nums: list[float]) -> float | None:
+    if len(nums) < 2:
+        return None
+
+    largest = second = float('-inf')
+    for n in nums:
+        if n > largest:
+            second = largest
+            largest = n
+        elif n > second and n != largest:
+            second = n
+
+    return second if second != float('-inf') else None
+\`\`\`
+
+注意我处理了两个边界情况：列表长度不足 2，以及所有元素相同（如 [5, 5, 5]）的情况，都返回 None。`;
+
+  const nonThinkingAnswer = `\`\`\`python
+def second_largest(nums):
+    if len(nums) < 2:
+        return None
+    unique = list(set(nums))
+    if len(unique) < 2:
+        return None
+    unique.sort(reverse=True)
+    return unique[1]
+\`\`\`
+
+先去重再排序，返回第二个元素。`;
+
+  function tokenize(text) {
+    const tokens = [];
+    let i = 0;
+    while (i < text.length) {
+      const ch = text[i];
+      if (/[一-龥，。、！？：；""''（）]/.test(ch)) {
+        tokens.push(ch);
+        i++;
+      } else if (/[a-zA-Z0-9_]/.test(ch)) {
+        let word = '';
+        while (i < text.length && /[a-zA-Z0-9_]/.test(text[i])) {
+          word += text[i];
+          i++;
+        }
+        tokens.push(word);
+      } else {
+        tokens.push(ch);
+        i++;
+      }
+    }
+    return tokens;
+  }
+
+  const ICONS = {
+    play:  '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7-4.5z"/></svg>',
+    pause: '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="4.5" y="3.5" width="2.5" height="9" rx="0.5"/><rect x="9" y="3.5" width="2.5" height="9" rx="0.5"/></svg>',
+    reset: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8a6 6 0 1 0 1.76-4.24"/><path d="M2 2v4h4"/></svg>',
+    check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.5 3.5L13 5"/></svg>'
+  };
+  const setBtn = (btn, iconKey, label) => { btn.innerHTML = ICONS[iconKey] + '<span>' + label + '</span>'; };
+
+  const speed = document.getElementById('speed');
+  const speedOut = document.getElementById('speed-out');
+  const startBtn = document.getElementById('start-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const thinkToggle = document.getElementById('thinking-toggle');
+  const toggleHint = document.getElementById('toggle-hint');
+  const thinkCard = document.getElementById('thinking-card');
+  const thinkHeader = document.getElementById('thinking-header');
+  const thinkBody = document.getElementById('thinking-body');
+  const thinkLabel = document.getElementById('thinking-label');
+  const thinkMeta = document.getElementById('thinking-meta');
+  const ansCard = document.getElementById('answer-card');
+  const ansBody = document.getElementById('answer-body');
+  const phaseOut = document.getElementById('phase-out');
+  const timeOut = document.getElementById('time-out');
+  const thinkTokOut = document.getElementById('think-tok');
+  const ansTokOut = document.getElementById('ans-tok');
+  const thinkStat = document.getElementById('think-stat');
+  const presets = document.querySelectorAll('.preset');
+
+  let timer = null;
+  let startTime = 0;
+  let curIdx = 0;
+  let running = false;
+  let thinkEndTime = 0;
+
+  let activeThinkTokens = [];
+  let activeAnsTokens = [];
+  let totalTokens = 0;
+
+  function rebuildTokens() {
+    if (thinkToggle.checked) {
+      activeThinkTokens = tokenize(thinkingText);
+      activeAnsTokens = tokenize(thinkingAnswer);
+    } else {
+      activeThinkTokens = [];
+      activeAnsTokens = tokenize(nonThinkingAnswer);
+    }
+    totalTokens = activeThinkTokens.length + activeAnsTokens.length;
+  }
+
+  function updateToggleHint() {
+    if (thinkToggle.checked) {
+      toggleHint.textContent = '开启 — 模型先思考再回答';
+      thinkStat.classList.remove('disabled');
+    } else {
+      toggleHint.textContent = '关闭 — 直接回答，更快但更简略';
+      thinkStat.classList.add('disabled');
+    }
+  }
+
+  function setSpeed(tps) {
+    speed.value = tps;
+    speedOut.textContent = tps + ' tok/s';
+    presets.forEach(p => p.classList.toggle('active', parseInt(p.dataset.tps) === tps));
+  }
+
+  function reset() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    running = false;
+    curIdx = 0;
+    thinkEndTime = 0;
+    thinkCard.style.display = 'none';
+    thinkCard.classList.remove('collapsed');
+    thinkBody.textContent = '';
+    thinkBody.classList.remove('cursor');
+    thinkLabel.textContent = 'Thinking…';
+    thinkMeta.textContent = '';
+    ansCard.style.display = 'none';
+    ansBody.textContent = '';
+    ansBody.classList.remove('cursor');
+    phaseOut.textContent = 'Idle';
+    timeOut.textContent = '0.0s';
+    thinkTokOut.textContent = thinkToggle.checked ? '0' : '—';
+    ansTokOut.textContent = '0';
+    setBtn(startBtn, 'play', 'Start');
+    rebuildTokens();
+  }
+
+  function start() {
+    if (running) {
+      clearInterval(timer);
+      running = false;
+      setBtn(startBtn, 'play', 'Resume');
+      return;
+    }
+    if (curIdx >= totalTokens) reset();
+    running = true;
+    setBtn(startBtn, 'pause', 'Pause');
+
+    if (activeThinkTokens.length > 0) {
+      thinkCard.style.display = 'block';
+    } else {
+      ansCard.style.display = 'block';
+    }
+
+    startTime = Date.now() - (curIdx * 1000 / parseInt(speed.value));
+
+    const tick = () => {
+      const tps = parseInt(speed.value);
+      const elapsed = (Date.now() - startTime) / 1000;
+      const targetIdx = Math.floor(elapsed * tps);
+
+      if (targetIdx > curIdx) {
+        curIdx = Math.min(targetIdx, totalTokens);
+
+        if (activeThinkTokens.length > 0 && curIdx <= activeThinkTokens.length) {
+          phaseOut.textContent = 'Thinking';
+          thinkBody.textContent = activeThinkTokens.slice(0, curIdx).join('');
+          thinkBody.classList.add('cursor');
+          thinkBody.scrollTop = thinkBody.scrollHeight;
+          thinkTokOut.textContent = curIdx;
+        } else {
+          if (activeThinkTokens.length > 0 && thinkEndTime === 0) {
+            thinkEndTime = elapsed;
+            thinkBody.classList.remove('cursor');
+            thinkLabel.textContent = 'Thought for ' + thinkEndTime.toFixed(1) + 's';
+            thinkMeta.textContent = activeThinkTokens.length + ' tokens';
+            thinkCard.classList.add('collapsed');
+            ansCard.style.display = 'block';
+            thinkTokOut.textContent = activeThinkTokens.length;
+          }
+          phaseOut.textContent = 'Answering';
+          const ansIdx = curIdx - activeThinkTokens.length;
+          ansBody.textContent = activeAnsTokens.slice(0, ansIdx).join('');
+          ansBody.classList.add('cursor');
+          ansTokOut.textContent = ansIdx;
+        }
+      }
+
+      timeOut.textContent = elapsed.toFixed(1) + 's';
+
+      if (curIdx >= totalTokens) {
+        clearInterval(timer);
+        timer = null;
+        running = false;
+        ansBody.classList.remove('cursor');
+        phaseOut.textContent = 'Done';
+        setBtn(startBtn, 'check', 'Done');
+      }
+    };
+    timer = setInterval(tick, 50);
+  }
+
+  thinkHeader.addEventListener('click', () => {
+    thinkCard.classList.toggle('collapsed');
+  });
+
+  thinkToggle.addEventListener('change', () => {
+    updateToggleHint();
+    reset();
+  });
+
+  speed.addEventListener('input', () => {
+    const tps = parseInt(speed.value);
+    setSpeed(tps);
+    if (running) startTime = Date.now() - (curIdx * 1000 / tps);
+  });
+
+  presets.forEach(p => {
+    p.addEventListener('click', () => {
+      const tps = parseInt(p.dataset.tps);
+      setSpeed(tps);
+      if (running) startTime = Date.now() - (curIdx * 1000 / tps);
+    });
+  });
+
+  startBtn.addEventListener('click', start);
+  resetBtn.addEventListener('click', reset);
+
+  updateToggleHint();
+  rebuildTokens();
+})();
+</script>
+
+</body>
+</html>

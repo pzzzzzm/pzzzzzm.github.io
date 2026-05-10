@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotation Gray Code · Stamp Foldings &amp; Semi-meanders — IWOCA 2024</title>
+  <script src="../../../assets/js/theme.js"></script>
+  <link rel="stylesheet" href="../../../assets/css/app-chrome.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stage-wrap">
+  <div class="viz-wrap">
+    <div class="pane pane-fold">
+      <svg id="stage" preserveAspectRatio="xMidYMid meet"></svg>
+      <span class="pane-label">meander</span>
+    </div>
+    <div class="pane-divider"></div>
+    <div class="pane pane-ladder">
+      <svg id="ladder-stage" preserveAspectRatio="xMidYMid meet"></svg>
+      <span class="pane-label">recursion tree branch</span>
+    </div>
+  </div>
+  <section class="thumbs-section open">
+    <div class="thumbs-header">
+      <button id="thumbs-toggle">▾ thumbnails</button>
+      <button id="load-more">load more</button>
+      <span id="mem-estimate" class="mem-estimate" title="approximate cache footprint in this tab">~0 B</span>
+    </div>
+    <div class="thumbs-body" id="thumbs"></div>
+  </section>
+</div>
+
+<div class="layout-divider"></div>
+
+<aside class="sidebar">
+  <div class="chrome-bar">
+    <a class="app-home" href="../../../">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4l-4 4 4 4"/></svg>
+      home
+    </a>
+    <button class="theme-toggle" aria-label="toggle theme" title="toggle theme">
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+    </button>
+  </div>
+
+  <h1 class="app-title">Combinatorial Gray Codes</h1>
+
+  <h2 class="section-label">Algorithm</h2>
+  <div id="algo-picker-mount"></div>
+  <script type="module">
+    import { renderAlgoPicker } from '../algo-nav.js?v=algonav1';
+    renderAlgoPicker(document.getElementById('algo-picker-mount'), 'iwoca');
+  </script>
+
+  <h2 class="section-label">Mode</h2>
+  <div class="mode-toggle">
+    <label><input type="radio" name="mode" value="stamp" checked>stamp</label>
+    <label><input type="radio" name="mode" value="semi">semi-meander</label>
+  </div>
+
+  <h2 class="section-label">Parameters</h2>
+  <div class="field">
+    <label for="n-input">n</label>
+    <input id="n-input" type="number" min="2" max="10" value="5">
+  </div>
+
+  <h2 class="section-label">Playback</h2>
+  <div class="controls">
+    <button id="prev-btn" title="Previous (←)" aria-label="previous">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 3.5h1.6v9H3zm10 0v9l-7-4.5z"/></svg>
+    </button>
+    <button id="play-btn" title="Play / Pause (Space)" aria-label="play">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7-4.5z"/></svg>
+    </button>
+    <button id="next-btn" title="Next (→)" aria-label="next">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.4 3.5H13v9h-1.6zM3 3.5v9l7-4.5z"/></svg>
+    </button>
+    <button id="reset-btn" title="Reset" aria-label="reset">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8a6 6 0 1 0 1.76-4.24"/><path d="M2 2v4h4"/></svg>
+    </button>
+  </div>
+  <div class="field">
+    <label for="speed-range">speed</label>
+    <input id="speed-range" type="range" min="1" max="10" value="5">
+  </div>
+  <div id="counter">— / —</div>
+
+  <h2 class="section-label">Operation</h2>
+  <div id="op-line">—</div>
+
+  <h2 class="section-label">Links</h2>
+  <ul class="links">
+    <li>
+      <a href="https://github.com/pzzzzzm/MyCodes/tree/main/PaperCodes/(IWOCA%202023)_stamp_foldings_and_semi-meanders_rotation_gray_codes" target="_blank" rel="noopener">
+        code on GitHub
+        <svg class="link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h6v6"/><path d="M11.5 4.5L4.5 11.5"/></svg>
+      </a>
+    </li>
+    <li>
+      <a href="https://arxiv.org/abs/2411.05458" target="_blank" rel="noopener">
+        paper on arXiv
+        <svg class="link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h6v6"/><path d="M11.5 4.5L4.5 11.5"/></svg>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<div class="dbp-watermark">DBP.</div>
+
+<script type="module" src="app.js?v=iwoca3"></script>
+</body>
+</html>
