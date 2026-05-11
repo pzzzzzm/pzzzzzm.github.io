@@ -525,22 +525,5 @@ html, body {
 .thumb-root { fill: var(--root-fill); stroke: var(--root-fill); }
 
 /* ----- Responsive ----- */
-@media (max-width: 880px) {
-  .sidebar {
-    position: static;
-    width: auto;
-    margin: 16px;
-    max-height: none;
-  }
-  .stage-wrap {
-    padding: 0 16px 16px;
-    height: auto;
-  }
-  .viz-wrap {
-    flex-direction: column;
-    min-height: 360px;
-  }
-  .pane { min-height: 240px; }
-  .pane-divider { display: none; }
-  .layout-divider { display: none; }
-}
+/* Narrow-viewport drawer + stacking rules live in shared
+   assets/css/app-chrome.css. */

@@ -2,9 +2,9 @@
 // pockets. Left pane = lattice walk; right pane = the (α, β, γ)
 // decomposition tapes the algorithm enumerates over.
 
-import { generatePaths, totalCount } from './algorithm.js?v=latin8';
-import { layoutLattice, layoutGrid, walkAgainstGrid, layoutDecomp } from './layout.js?v=latin8';
-import { PathSequence } from './cache.js?v=latin8';
+import { generatePaths, totalCount } from './algorithm.js?v=latin9';
+import { layoutLattice, layoutGrid, walkAgainstGrid, layoutDecomp } from './layout.js?v=latin9';
+import { PathSequence } from './cache.js?v=latin9';
 
 const $ = (s) => document.querySelector(s);
 const stage     = $('#stage');

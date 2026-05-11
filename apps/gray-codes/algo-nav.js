@@ -18,22 +18,10 @@ export const algorithms = [
     href: '../iwoca-stamp-folding/',
   },
   {
-    id: 'lucas',
-    name: 'Lucas / Fibonacci words',
-    tag:  'CPM 2025',
-    dim: true,
-  },
-  {
     id: 'motzkin',
-    name: 'Grand Motzkin &amp; Dyck Paths with Air Pockets',
+    name: '2-Gray Codes for Grand Motzkin &amp; Dyck Paths with Air Pockets',
     tag:  'LATIN 2026',
     href: '../latin-grand-motzkin/',
-  },
-  {
-    id: 'fib',
-    name: 'Fibonacci q-decreasing',
-    tag:  'WALCOM 2024',
-    dim: true,
   },
 ];
 

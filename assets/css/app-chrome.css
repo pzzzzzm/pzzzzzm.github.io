@@ -106,6 +106,110 @@ html, body {
 :root[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
 :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
+/* ----- Sidebar drawer (narrow viewports) -----
+   At wide widths each app's stylesheet positions `.sidebar` as a fixed
+   left-column. On phones/tablets in portrait that column gets pushed
+   off-screen, so we convert the sidebar into a left-edge slide-in drawer
+   plus a hamburger button + scrim. The drawer covers the stage when open;
+   the wide-screen layout is unchanged. */
+
+/* Hamburger / close toggle pinned to top-left of viewport. Reuses the
+   .theme-toggle pill look so it blends into the chrome vocabulary. */
+.sidebar-toggle {
+  display: none;             /* shown only at narrow widths */
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: var(--bg-card);
+  border: 0.5px solid rgba(128, 128, 128, 0.55);
+  border-radius: 50%;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.95;
+  z-index: 30;
+  transition: opacity 0.15s, background 0.15s, transform 0.2s;
+  font: inherit;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.sidebar-toggle:hover { opacity: 1; background: var(--bg-soft); }
+.sidebar-toggle:active { transform: scale(0.94); }
+.sidebar-toggle svg { width: 14px; height: 14px; }
+.sidebar-toggle .icon-menu  { display: block; }
+.sidebar-toggle .icon-close { display: none; }
+body.sidebar-open .sidebar-toggle .icon-menu  { display: none; }
+body.sidebar-open .sidebar-toggle .icon-close { display: block; }
+
+/* Scrim behind the open drawer. Hidden by default; covers the rest of the
+   viewport at narrow widths when the drawer is open. */
+.sidebar-scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  z-index: 15;
+  transition: opacity 0.2s ease;
+}
+
+@media (max-width: 880px) {
+  /* Shared narrow-layout rules (previously duplicated in each per-app
+     stylesheet). Stack the panes, drop dividers, give the stage edge
+     padding that doesn't leave room for the (now-drawer) sidebar.
+     `!important` is used because per-app stylesheets load AFTER this file
+     and otherwise win the cascade for the wide-screen `.stage-wrap` and
+     `.viz-wrap` rules. */
+  .stage-wrap {
+    padding: 56px 16px 16px !important;  /* top padding clears the hamburger */
+    height: auto !important;
+  }
+  .viz-wrap {
+    flex-direction: column !important;
+    min-height: 360px;
+  }
+  .pane { min-height: 240px; }
+  .pane-divider { display: none !important; }
+  .layout-divider { display: none !important; }
+
+  /* Convert the fixed-left sidebar into a slide-in drawer. The wide-screen
+     `.sidebar` rule (per-app) supplies the glass background, padding, and
+     border-radius — we just override the positioning and animate width. */
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 88vw !important;
+    max-width: 320px !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 14px 14px 0 !important;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 20 !important;       /* must beat per-app's wide-screen z-index */
+    overflow-y: auto !important;
+  }
+  body.sidebar-open .sidebar {
+    transform: translateX(0) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Make the sidebar's chrome-bar leave room for the hamburger at top-left.
+     The hamburger sits OUTSIDE the drawer at left:12px width:30px, so its
+     right edge is at 42px in viewport coords. Drawer starts at left:0 with
+     padding-left ~24px, so the home pill at content-x=24px would clash. */
+  .sidebar .chrome-bar { padding-left: 26px; }
+
+  /* Show the toggle button and activate scrim on narrow widths. */
+  .sidebar-toggle { display: inline-flex; }
+  .sidebar-scrim { display: block; pointer-events: none; }
+  body.sidebar-open .sidebar-scrim { opacity: 1; pointer-events: auto; }
+}
+
 /* ----- DBP. watermark (bottom-right of each app) ----- */
 .dbp-watermark {
   position: fixed;

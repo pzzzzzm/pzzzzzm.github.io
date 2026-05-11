@@ -125,8 +125,21 @@ export function layoutDecomp(op, opts = {}) {
   const gammaRow = layoutTape(op.gamma || [], 'γ', 'down magnitudes (shorthand)');
   const rows = [alphaRow, betaRow, gammaRow].filter(Boolean);
 
-  // Tape origin x (where the cells start). Cells flow left-to-right.
-  const tapeX = padX + rowLabelW;
+  // Horizontal centering. At narrow widths the SVG fills the full pane so
+  // there's lots of empty space to the right of the cells — center the
+  // whole block so it doesn't look left-anchored. We compute the widest
+  // visible row (cells row OR flag pills row) and offset everything so
+  // that block is centered inside the SVG.
+  const flagW = 56, flagGap = 10, flagCount = 3;   // d / dd / di
+  const flagsRowWidth = flagCount * flagW + (flagCount - 1) * flagGap;
+  const widestCellsRow = rowLabelW + cellW * longest;
+  const contentWidth = Math.max(widestCellsRow, flagsRowWidth);
+  const leftX = Math.max(padX, (W - contentWidth) / 2);
+
+  // Row labels (α/β/γ glyphs) and flag pills both anchor to leftX.
+  // The tape cells (and the hint text under each row) start one rowLabelW
+  // to the right so the labels have their own column.
+  const tapeX = leftX + rowLabelW;
 
   // Vertical centering: the lattice grid in the left pane is centered at
   // stageH/2 (see layoutGrid). Both panes share the same height, so we
@@ -138,8 +151,9 @@ export function layoutDecomp(op, opts = {}) {
   const rowStartY = Math.max(padY, (H - totalContentH) / 2);
 
   return {
-    rows, tapeX,
-    padX, padY, rowGap, rowLabelW, cellH,
+    rows, tapeX, leftX,
+    padX: leftX, padY, rowGap, rowLabelW, cellH,
+    flagW, flagGap,
     titleY: rowStartY - 24,
     rowStartY,
     flagsY: rowStartY + flagsTopOffset,
