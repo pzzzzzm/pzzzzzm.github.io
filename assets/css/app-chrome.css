@@ -122,8 +122,8 @@ html, body {
   position: fixed;
   top: 12px;
   left: 12px;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   background: var(--bg-card);
   border: 0.5px solid rgba(128, 128, 128, 0.55);
@@ -199,10 +199,21 @@ body.sidebar-open .sidebar-toggle .icon-close { display: block; }
   }
 
   /* Make the sidebar's chrome-bar leave room for the hamburger at top-left.
-     The hamburger sits OUTSIDE the drawer at left:12px width:30px, so its
-     right edge is at 42px in viewport coords. Drawer starts at left:0 with
+     The hamburger sits OUTSIDE the drawer at left:12px width:28px, so its
+     right edge is at 40px in viewport coords. Drawer starts at left:0 with
      padding-left ~24px, so the home pill at content-x=24px would clash. */
   .sidebar .chrome-bar { padding-left: 26px; }
+
+  /* Top-row alignment: when the drawer is open, the X (sidebar-toggle), the
+     home pill, and the theme toggle should read as a single row. The X is
+     fixed at top:12 height:28 (center y=26), so we pull the drawer's chrome-
+     bar up to match: padding-top:12 puts the chrome-bar at viewport y=12;
+     with a 28px tall row its center sits at y=26. Theme toggle and home pill
+     are bumped to the same 28px height so the three controls visually match
+     in size. The wide-screen layout is untouched. */
+  .sidebar { padding-top: 12px !important; }
+  .sidebar .theme-toggle { width: 28px; height: 28px; }
+  .sidebar .app-home { padding-top: 6px; padding-bottom: 6px; }
 
   /* Show the toggle button and activate scrim on narrow widths. */
   .sidebar-toggle { display: inline-flex; }
